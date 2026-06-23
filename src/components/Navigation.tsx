@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { User, LogOut, Settings, Package } from 'lucide-react';
+import { User, LogOut, Settings, Package, Home } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
+import { ADVANCED_MODE } from '@/lib/feature-flags';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -59,14 +60,16 @@ export default function Navigation() {
     { name: 'Home', path: '/', icon: '🏠' },
     { name: 'Dashboard', path: '/dashboard', icon: '📊', requiresAuth: true },
     { name: 'Compatibility', path: '/compatibility', icon: '🔍' },
-    { name: 'Controllers', path: '/controllers', icon: '📡' },
+    { name: 'Controllers', path: '/controllers', icon: '📡', advancedOnly: true },
     { name: 'Add Product', path: '/add-product', icon: '➕', requiresAuth: true },
     { name: 'My Products', path: '/my-products', icon: '📦', requiresAuth: true },
     { name: 'Getting Started', path: '/getting-started', icon: '📚' },
     { name: 'Request Device', path: '/request-device', icon: '🙋' },
   ];
 
-  const visibleNavItems = navItems.filter(item => !item.requiresAuth || user);
+  const visibleNavItems = navItems.filter(
+    item => (!item.requiresAuth || user) && (!item.advancedOnly || ADVANCED_MODE)
+  );
 
   const isActive = (path: string) => {
     if (path === '/') return pathname === '/';
@@ -148,6 +151,14 @@ export default function Navigation() {
                       >
                         <Package className="w-4 h-4" />
                         My Products
+                      </Link>
+                      <Link
+                        href="/settings"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        <Home className="w-4 h-4" />
+                        Smart Home Settings
                       </Link>
                       {isAdmin && (
                         <Link
@@ -245,6 +256,14 @@ export default function Navigation() {
                     <p className="text-xs text-gray-500">{isAdmin ? 'Administrator' : 'User'}</p>
                   </div>
                 </div>
+                <Link
+                  href="/settings"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
+                >
+                  <Home className="w-4 h-4" />
+                  Smart Home Settings
+                </Link>
                 {isAdmin && (
                   <Link
                     href="/admin"

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
+import { ADVANCED_MODE } from '@/lib/feature-flags';
 import { Home as HomeIcon, CheckCircle, XCircle, Zap } from 'lucide-react';
 import { generateAmazonLink } from '@/lib/amazon-affiliate';
 import DeviceCategoryShowcase from '@/components/DeviceCategoryShowcase';
@@ -495,6 +496,7 @@ export default async function Home() {
       )}
 
       {/* ── Protocol Controllers ─────────────────────────────────────── */}
+      {ADVANCED_MODE && (
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-10">
@@ -564,6 +566,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── Features ─────────────────────────────────────────────────── */}
       <section id="features" className="bg-gray-50 py-16">
@@ -604,6 +607,7 @@ export default async function Home() {
               </p>
             </div>
 
+            {ADVANCED_MODE && (
             <div className="bg-white p-6 rounded-xl border border-[#d1ecd7] hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-[#3d8b54] rounded-xl flex items-center justify-center mb-4 shadow-sm">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -616,6 +620,7 @@ export default async function Home() {
                 Home Assistant YAML instantly.
               </p>
             </div>
+            )}
 
             <div className="bg-white p-6 rounded-xl border border-orange-200 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mb-4 shadow-sm">
@@ -732,10 +737,14 @@ export default async function Home() {
               <h4 className="font-bold mb-4 text-[#6fbf7d]">Product</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li><a href="/compatibility" className="hover:text-[#6fbf7d] transition">Compatibility</a></li>
-                <li><a href="/controllers" className="hover:text-[#6fbf7d] transition">Controllers</a></li>
-                <li><a href="/bestsellers" className="hover:text-[#6fbf7d] transition">Best Sellers</a></li>
-                <li><a href="/tools/yaml-generator" className="hover:text-[#6fbf7d] transition">YAML Generator</a></li>
                 <li><a href="/dashboard" className="hover:text-[#6fbf7d] transition">Dashboard</a></li>
+                {ADVANCED_MODE && (
+                  <>
+                    <li><a href="/controllers" className="hover:text-[#6fbf7d] transition">Controllers</a></li>
+                    <li><a href="/bestsellers" className="hover:text-[#6fbf7d] transition">Best Sellers</a></li>
+                    <li><a href="/tools/yaml-generator" className="hover:text-[#6fbf7d] transition">YAML Generator</a></li>
+                  </>
+                )}
               </ul>
             </div>
             <div>

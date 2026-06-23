@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { Card } from '@/components/ui/Card';
@@ -31,6 +32,13 @@ const PROTOCOL_COLORS: Record<string, string> = {
   Matter: '#6366F1',
   Bluetooth: '#3B82F6',
 };
+
+interface UserSettings {
+  hub_type: string | null;
+  hub_name: string | null;
+  protocols_used: string[];
+  primary_ecosystem: string | null;
+}
 
 interface UserProduct {
   id: string;
@@ -64,6 +72,7 @@ const NetworkDiagram = dynamic<{ userProducts: UserProduct[] }>(
 export default function Dashboard() {
   const router = useRouter();
   const [userProducts, setUserProducts] = useState<UserProduct[]>([]);
+  const [userSettings, setUserSettings] = useState<UserSettings | null | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [selectedEcosystem, setSelectedEcosystem] = useState<string>('all');
   const [view, setView] = useState<'card' | 'network'>('card');
@@ -81,24 +90,32 @@ export default function Dashboard() {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('user_products')
-      .select(`
-        id,
-        room,
-        products (
-          id, name, brand, category, protocols,
-          ecosystems, home_assistant, image_url,
-          requires_hub, hub_name
-        )
-      `)
-      .eq('user_id', user.id);
+    const [productsResult, settingsResult] = await Promise.all([
+      supabase
+        .from('user_products')
+        .select(`
+          id,
+          room,
+          products (
+            id, name, brand, category, protocols,
+            ecosystems, home_assistant, image_url,
+            requires_hub, hub_name
+          )
+        `)
+        .eq('user_id', user.id),
+      supabase
+        .from('user_settings')
+        .select('hub_type, hub_name, protocols_used, primary_ecosystem')
+        .eq('user_id', user.id)
+        .maybeSingle(),
+    ]);
 
-    if (error) {
-      console.error('Error fetching user products:', error);
+    if (productsResult.error) {
+      console.error('Error fetching user products:', productsResult.error);
     } else {
-      setUserProducts((data as unknown as UserProduct[]) || []);
+      setUserProducts((productsResult.data as unknown as UserProduct[]) || []);
     }
+    setUserSettings(settingsResult.data ?? null);
     setLoading(false);
   };
 
@@ -157,7 +174,11 @@ export default function Dashboard() {
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Smart Home Dashboard</h1>
-            <p className="text-gray-600">Visual overview of your smart home ecosystem</p>
+            <p className="text-gray-600">
+              {userSettings?.hub_name
+                ? `${userSettings.hub_name} · Visual overview of your smart home`
+                : 'Visual overview of your smart home ecosystem'}
+            </p>
           </div>
           {!loading && userProducts.length > 0 && (
             <div className="flex bg-[#f0f9f2] rounded-lg p-1 gap-1 flex-shrink-0 border border-[#d1ecd7]">
@@ -190,6 +211,32 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+
+        {/* Onboarding banner — shown once user has devices but hasn't configured settings */}
+        {!loading && userSettings === null && userProducts.length > 0 && (
+          <div className="bg-[#f0f9f2] border border-[#d1ecd7] rounded-xl p-5 mb-6 flex items-start gap-4">
+            <div className="flex-shrink-0 w-10 h-10 bg-[#2e6f40] rounded-full flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-[#1f4d2b] mb-1">Complete your smart home setup</p>
+              <p className="text-sm text-gray-600 mb-3">
+                Tell us about your hub, protocols, and ecosystem to unlock personalised insights.
+              </p>
+              <div className="flex items-center gap-3">
+                <Button size="sm" onClick={() => router.push('/settings')}>
+                  Configure Settings
+                </Button>
+                <Link href="#" onClick={(e) => { e.preventDefault(); setUserSettings({ hub_type: null, hub_name: null, protocols_used: [], primary_ecosystem: null }); }} className="text-sm text-gray-500 hover:text-gray-700">
+                  Skip for now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <Card className="p-12 text-center">

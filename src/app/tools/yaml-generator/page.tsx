@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
+import { ADVANCED_MODE } from '@/lib/feature-flags';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 import { ChatMessage, ChatTypingIndicator } from '@/components/ui/ChatMessage';
 import { Button } from '@/components/ui/Button';
@@ -276,6 +278,26 @@ export default function YamlGeneratorPage() {
   // ══════════════════════════════════════════════════════════════════════════
   // Render
   // ══════════════════════════════════════════════════════════════════════════
+
+  if (!ADVANCED_MODE) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <div className="text-6xl mb-6">🚀</div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Coming Soon</h1>
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            The AI YAML Generator is launching soon. Check back later!
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center px-6 py-3 bg-[#2e6f40] text-white rounded-xl font-semibold hover:bg-[#3d8b54] transition-colors"
+          >
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

@@ -46,7 +46,7 @@ export default function MyProducts() {
   const router = useRouter();
   const [userProducts, setUserProducts] = useState<UserProduct[]>([]);
   const [loading, setLoading] = useState(true);
-  const [groupBy, setGroupBy] = useState<'room' | 'category'>('room');
+  const [groupBy, setGroupBy] = useState<'room' | 'category' | 'protocol'>('room');
   const [deleting, setDeleting] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ room: '', custom_name: '', purchase_date: '', notes: '' });
@@ -124,14 +124,32 @@ export default function MyProducts() {
     setSaving(false);
   };
 
-  const groupedProducts = userProducts.reduce((acc, product) => {
-    const key = groupBy === 'room'
-      ? product.room || 'Unassigned'
-      : product.products.category;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(product);
-    return acc;
-  }, {} as Record<string, UserProduct[]>);
+  const groupedProducts = (() => {
+    if (groupBy === 'protocol') {
+      const acc: Record<string, UserProduct[]> = {};
+      for (const product of userProducts) {
+        const protos = product.products.protocols;
+        if (!protos || protos.length === 0) {
+          if (!acc['Unassigned']) acc['Unassigned'] = [];
+          acc['Unassigned'].push(product);
+        } else {
+          for (const proto of protos) {
+            if (!acc[proto]) acc[proto] = [];
+            acc[proto].push(product);
+          }
+        }
+      }
+      return acc;
+    }
+    return userProducts.reduce((acc, product) => {
+      const key = groupBy === 'room'
+        ? product.room || 'Unassigned'
+        : product.products.category;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(product);
+      return acc;
+    }, {} as Record<string, UserProduct[]>);
+  })();
 
   const totalProducts = userProducts.length;
   const roomsUsed = new Set(userProducts.filter(p => p.room).map(p => p.room)).size;
@@ -186,6 +204,16 @@ export default function MyProducts() {
               }`}
             >
               Category
+            </button>
+            <button
+              onClick={() => setGroupBy('protocol')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                groupBy === 'protocol'
+                  ? 'bg-[#2e6f40] text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-[#f0f9f2] hover:text-[#2e6f40]'
+              }`}
+            >
+              Protocol
             </button>
           </div>
         </Card>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { generateAmazonLink } from '@/lib/amazon-affiliate';
+import { ADVANCED_MODE } from '@/lib/feature-flags';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -723,6 +724,25 @@ function ControllersContent() {
 }
 
 export default function ControllersPage() {
+  if (!ADVANCED_MODE) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <div className="text-6xl mb-6">🚀</div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Coming Soon</h1>
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            Protocol Controllers &amp; Coordinators is launching soon. Check back later!
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center px-6 py-3 bg-[#2e6f40] text-white rounded-xl font-semibold hover:bg-[#3d8b54] transition-colors"
+          >
+            Back to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
   return (
     <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><p className="text-gray-500">Loading controllers…</p></div>}>
       <ControllersContent />

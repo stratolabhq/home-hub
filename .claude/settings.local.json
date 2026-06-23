@@ -56,7 +56,9 @@
       "Bash(grep -E \"^[├└] [○ƒ] /$|Route \\\\\\(app\\\\\\)|Error\")",
       "Bash(grep -E \" / $| /\\\\b\")",
       "Bash(grep -r \"AMAZON_PA\\\\|PA_API\" /home/stratolabhq/projects/home-hero-hub --include=*.ts --include=*.tsx --include=*.env*)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(npx eslint *)",
+      "Bash(git check-ignore *)"
     ]
   }
 }
