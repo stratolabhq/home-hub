@@ -1,6 +1,6 @@
 # Home Hub - Development Context
 
-**Last Updated:** July 18, 2026
+**Last Updated:** July 19, 2026
 
 > **Maintenance rule:** This is the single source of truth for project context.
 > Every meaningful Claude Code commit should update this file in the same commit
@@ -222,6 +222,15 @@ Home Assistant `#03A9F4` · SmartThings `#009FDA` · Hubitat `#6B4FA4`
 > Append-only log of non-obvious decisions and traps. Newest first. Each entry:
 > date — the thing — why it matters.
 
+- **2026-07-19 — Compatibility page has no chipset/protocol-version/connection-type
+  filters.** Those live on the Controllers page (`/controllers`) only. The
+  Compatibility page's actual "advanced" tier is just specific protocol toggles
+  (Zigbee/Z-Wave/Thread/Matter/etc.) and the "works with my ecosystem" inventory
+  match — everything else (search, sort, platform select, category, price,
+  popular-only, Home Assistant toggle) stayed in the beginner-visible default
+  view since none of it requires protocol knowledge. Check the actual `Filters`
+  interface before assuming a filter list from a planning doc matches the page.
+
 - **2026-07-18 — Home Assistant is NOT an ecosystem-select value.** In the DB,
   `home_assistant` is its own BOOLEAN column, separate from the ecosystem keys
   (`alexa`/`google_home`/`apple_homekit`) the compatibility page's filter select
@@ -277,6 +286,13 @@ Home Assistant `#03A9F4` · SmartThings `#009FDA` · Hubitat `#6B4FA4`
   picker as primary CTA → `/compatibility?ecosystem=<v>&popular=1`. "Starter view"
   caps to 8 devices (no-hub → WiFi → cheapest). Added `popular-filter.ts`; fixed
   the URL-param-parsing gap on the compat page.
+- **Beginner-safe Compatibility filter defaults** — protocol toggles and "works
+  with my ecosystem" demoted behind a closed-by-default "More filters" expander;
+  platform/category/price/popular/Home-Assistant stay visible. Expander
+  auto-opens (never auto-closes) whenever a restored advanced filter is active,
+  so nothing applied is ever hidden. "Ecosystem" filter label renamed to
+  "Platform" for terminology consistency. localStorage persistence and the
+  Issue 2 starter-view/URL-param logic untouched.
 
 **Pre-migration / earlier (March 2026)**
 - Password visibility toggle; profile dropdown nav; user settings wizard +
@@ -293,8 +309,6 @@ Home Assistant `#03A9F4` · SmartThings `#009FDA` · Hubitat `#6B4FA4`
 Tracked as GitHub issues (labels: `phase-1`). Checklist "Issue N" labels are
 planning names and do NOT match GitHub issue numbers.
 
-- Beginner-safe defaults on Compatibility page (pre-select popular, demote
-  advanced protocol filters behind "More filters")
 - Device count consistency (868 vs 10,800 — pick one true number everywhere)
 - Dead/duplicate links + legal pages (Privacy, Terms, About, affiliate
   disclosure, fix Doorbells card duplicating Security filter)

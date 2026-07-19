@@ -183,6 +183,13 @@ function countActiveFilters(f: Filters): number {
   return n;
 }
 
+// "Advanced" tier for the More filters expander: specific protocol toggles and
+// the my-inventory match, which assume protocol knowledge or an existing
+// account — not part of the core beginner platform → category → price flow.
+function countAdvancedActiveFilters(f: Filters): number {
+  return f.protocols.length + (f.myEcosystem ? 1 : 0);
+}
+
 function getEcosystemBadgeVariant(level?: string): 'green' | 'amber' | 'gray' {
   if (level === 'full') return 'green';
   if (level === 'partial') return 'amber';
@@ -200,6 +207,11 @@ function CompatibilityContent() {
 
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  // "More filters" (advanced tier) — closed by default. Never force-closed;
+  // only ever auto-opened when an advanced filter is active, so a restored
+  // (localStorage or URL) advanced selection is never hidden from view.
+  const [advancedOpen, setAdvancedOpen] = useState(false);
 
   // True when the current filter state came from a homepage platform card
   // (e.g. /compatibility?ecosystem=alexa&popular=1) rather than manual use
@@ -238,6 +250,12 @@ function CompatibilityContent() {
   useEffect(() => {
     saveFilters(filters);
   }, [filters]);
+
+  useEffect(() => {
+    if (filters.protocols.length > 0 || filters.myEcosystem) {
+      setAdvancedOpen(true);
+    }
+  }, [filters.protocols, filters.myEcosystem]);
 
   useEffect(() => {
     fetchProducts(filters.popularOnly);
@@ -310,6 +328,7 @@ function CompatibilityContent() {
   };
 
   const activeCount = useMemo(() => countActiveFilters(filters), [filters]);
+  const advancedActiveCount = useMemo(() => countAdvancedActiveFilters(filters), [filters]);
 
   const toggleProtocol = (p: string) =>
     patch({ protocols: filters.protocols.includes(p) ? filters.protocols.filter(x => x !== p) : [...filters.protocols, p] });
@@ -504,44 +523,21 @@ function CompatibilityContent() {
                 </select>
               </div>
 
-              {/* Ecosystem */}
+              {/* Platform */}
               <div className="xl:col-span-1">
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Ecosystem</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Platform</label>
                 <select
                   value={filters.ecosystem}
                   onChange={e => patch({ ecosystem: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                 >
-                  <option value="all">All Ecosystems</option>
+                  <option value="all">All Platforms</option>
                   <option value="alexa">Amazon Alexa</option>
                   <option value="google_home">Google Home</option>
                   <option value="apple_homekit">Apple HomeKit</option>
                   <option value="smartthings">Samsung SmartThings</option>
                   <option value="matter">Matter</option>
                 </select>
-              </div>
-
-              {/* Protocols */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Protocols</label>
-                <div className="flex flex-wrap gap-2">
-                  {ALL_PROTOCOLS.map(proto => (
-                    <button
-                      key={proto}
-                      onClick={() => toggleProtocol(proto)}
-                      className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
-                        filters.protocols.includes(proto)
-                          ? 'bg-[#2e6f40] text-white border-[#2e6f40]'
-                          : 'bg-white text-gray-600 border-gray-300 hover:border-[#6fbf7d]'
-                      }`}
-                    >
-                      {proto}
-                    </button>
-                  ))}
-                </div>
-                {filters.protocols.length > 1 && (
-                  <p className="text-xs text-gray-400 mt-1">Must support all selected</p>
-                )}
               </div>
 
               {/* Categories */}
@@ -617,37 +613,87 @@ function CompatibilityContent() {
                   </div>
                   <span className="text-sm text-gray-700">Works with Home Assistant</span>
                 </label>
-
-                {/* Toggle: My Ecosystem */}
-                {user && (
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <div
-                      onClick={async () => {
-                        if (!inventoryLoaded) await loadInventory();
-                        patch({ myEcosystem: !filters.myEcosystem });
-                      }}
-                      className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
-                        filters.myEcosystem ? 'bg-[#2e6f40]' : 'bg-gray-300'
-                      }`}
-                    >
-                      <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${
-                        filters.myEcosystem ? 'translate-x-4' : 'translate-x-0.5'
-                      }`} />
-                    </div>
-                    <div>
-                      <span className="text-sm text-gray-700">Works with my ecosystem</span>
-                      {userEcosystems.size > 0 && (
-                        <span className="block text-xs text-gray-400">
-                          Detected: {[...userEcosystems].map(e => e.replace('_', ' ')).join(', ')}
-                        </span>
-                      )}
-                      {filters.myEcosystem && !inventoryLoaded && loadingInventory && (
-                        <span className="block text-xs text-gray-400">Loading inventory…</span>
-                      )}
-                    </div>
-                  </label>
-                )}
               </div>
+            </div>
+
+            {/* ── More filters (advanced tier) ─────────────────────────── */}
+            <div className="border-t border-gray-100 px-4 md:px-5">
+              <button
+                onClick={() => setAdvancedOpen(v => !v)}
+                className="w-full flex items-center justify-between py-3 text-sm font-semibold text-gray-700 hover:text-[#2e6f40] transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  More filters
+                  {advancedActiveCount > 0 && (
+                    <span className="px-2 py-0.5 bg-[#2e6f40] text-white rounded-full text-xs font-semibold">
+                      {advancedActiveCount} active
+                    </span>
+                  )}
+                </span>
+                <svg
+                  className={`w-4 h-4 text-gray-400 transition-transform ${advancedOpen ? 'rotate-180' : ''}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {advancedOpen && (
+                <div className="pb-5 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                  {/* Protocols */}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Protocols</label>
+                    <div className="flex flex-wrap gap-2">
+                      {ALL_PROTOCOLS.map(proto => (
+                        <button
+                          key={proto}
+                          onClick={() => toggleProtocol(proto)}
+                          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+                            filters.protocols.includes(proto)
+                              ? 'bg-[#2e6f40] text-white border-[#2e6f40]'
+                              : 'bg-white text-gray-600 border-gray-300 hover:border-[#6fbf7d]'
+                          }`}
+                        >
+                          {proto}
+                        </button>
+                      ))}
+                    </div>
+                    {filters.protocols.length > 1 && (
+                      <p className="text-xs text-gray-400 mt-1">Must support all selected</p>
+                    )}
+                  </div>
+
+                  {/* Toggle: My Ecosystem */}
+                  {user && (
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <div
+                        onClick={async () => {
+                          if (!inventoryLoaded) await loadInventory();
+                          patch({ myEcosystem: !filters.myEcosystem });
+                        }}
+                        className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
+                          filters.myEcosystem ? 'bg-[#2e6f40]' : 'bg-gray-300'
+                        }`}
+                      >
+                        <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+                          filters.myEcosystem ? 'translate-x-4' : 'translate-x-0.5'
+                        }`} />
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-700">Works with my ecosystem</span>
+                        {userEcosystems.size > 0 && (
+                          <span className="block text-xs text-gray-400">
+                            Detected: {[...userEcosystems].map(e => e.replace('_', ' ')).join(', ')}
+                          </span>
+                        )}
+                        {filters.myEcosystem && !inventoryLoaded && loadingInventory && (
+                          <span className="block text-xs text-gray-400">Loading inventory…</span>
+                        )}
+                      </div>
+                    </label>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Result count bar */}
