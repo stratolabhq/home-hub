@@ -9,6 +9,7 @@ import { StatsCard } from '@/components/ui/StatsCard';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ADVANCED_MODE } from '@/lib/feature-flags';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -180,7 +181,7 @@ export default function Dashboard() {
                 : 'Visual overview of your smart home ecosystem'}
             </p>
           </div>
-          {!loading && userProducts.length > 0 && (
+          {!loading && userProducts.length > 0 && ADVANCED_MODE && (
             <div className="flex bg-[#f0f9f2] rounded-lg p-1 gap-1 flex-shrink-0 border border-[#d1ecd7]">
               <button
                 onClick={() => setView('card')}
@@ -261,7 +262,7 @@ export default function Dashboard() {
           </Card>
         ) : (
           <>
-            {view === 'network' ? (
+            {view === 'network' && ADVANCED_MODE ? (
               <div className="mb-8">
                 <NetworkDiagram userProducts={userProducts} />
               </div>
