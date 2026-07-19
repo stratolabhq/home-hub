@@ -69,7 +69,7 @@ export default function AdminDashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Admin Dashboard</h1>
-          <p className="text-gray-500 text-sm">Overview of Home Hero Hub</p>
+          <p className="text-gray-500 text-sm">Overview of Home Hub</p>
         </div>
 
         {error && (

@@ -89,7 +89,7 @@ export default function Navigation() {
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
-                Home Hero Hub
+                Home Hub
               </span>
             </Link>
 

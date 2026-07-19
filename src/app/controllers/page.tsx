@@ -729,16 +729,27 @@ export default function ControllersPage() {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center max-w-md px-4">
           <div className="text-6xl mb-6">🚀</div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Coming Soon</h1>
-          <p className="text-gray-600 mb-8 leading-relaxed">
-            Protocol Controllers &amp; Coordinators is launching soon. Check back later!
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Almost ready</h1>
+          <p className="text-gray-600 mb-2 leading-relaxed">
+            We're building tools for managing hubs and coordinators.
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center px-6 py-3 bg-[#2e6f40] text-white rounded-xl font-semibold hover:bg-[#3d8b54] transition-colors"
-          >
-            Back to Home
-          </Link>
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            For now, here's what you can do today.
+          </p>
+          <div className="flex gap-3 justify-center flex-wrap">
+            <Link
+              href="/compatibility"
+              className="inline-flex items-center justify-center px-6 py-3 bg-[#2e6f40] text-white rounded-xl font-semibold hover:bg-[#3d8b54] transition-colors"
+            >
+              Browse starter picks
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center px-6 py-3 bg-white text-[#2e6f40] rounded-xl font-semibold border-2 border-[#2e6f40] hover:bg-[#f0f9f2] transition-colors"
+            >
+              Back to home
+            </Link>
+          </div>
         </div>
       </div>
     );

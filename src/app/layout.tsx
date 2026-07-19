@@ -3,7 +3,7 @@ import "./globals.css";
 import Navigation from "../components/Navigation";
 
 export const metadata: Metadata = {
-  title: "Home Hero Hub - Smart Home Compatibility",
+  title: "Home Hub - Smart Home Compatibility",
   description: "Check compatibility and manage your smart home devices",
 };
 

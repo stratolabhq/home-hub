@@ -590,7 +590,7 @@ export default function GettingStarted() {
                 <div className="bg-orange-50 border-l-4 border-orange-600 p-6 rounded-r-lg">
                   <h3 className="text-xl font-bold text-orange-900 mb-2">Step 4: Check Compatibility BEFORE Buying</h3>
                   <p className="text-gray-700 mb-3">
-                    Use Home Hero Hub's Compatibility Checker to verify devices work with your chosen ecosystem!
+                    Use Home Hub's Compatibility Checker to verify devices work with your chosen ecosystem!
                   </p>
                   <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                     <li>Look for "Works with Alexa/Google/HomeKit" on the box</li>
@@ -849,7 +849,7 @@ export default function GettingStarted() {
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-6 text-center">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">🚀 Ready to Get Started?</h3>
                 <p className="text-gray-700 mb-6">
-                  Use Home Hero Hub to check device compatibility, track your purchases, and visualize your smart home ecosystem!
+                  Use Home Hub to check device compatibility, track your purchases, and visualize your smart home ecosystem!
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
                   <a href="/compatibility" className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">

@@ -59,20 +59,20 @@ export default async function Home() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-            Find Smart Home Devices That{' '}
+            Build a smart home that{' '}
             <span style={{
               background: 'linear-gradient(135deg, #2e6f40, #3d8b54)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
             }}>
-              Actually Work Together
+              just works
             </span>
           </h1>
 
           <p className="text-xl text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Not sure if that smart bulb works with Alexa? We'll show you exactly
-            which devices are compatible with your smart home ecosystem—before you buy.
+            Pick the platform you already use — we'll show you devices that
+            work with it, no research required.
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">
@@ -95,7 +95,7 @@ export default async function Home() {
             {[
               { value: `${popularCount.toLocaleString()}+`, label: 'Popular Devices' },
               { value: 'Free',   label: 'Always Free to Search' },
-              { value: '6',     label: 'Ecosystems Tracked' },
+              { value: '6',     label: 'Platforms Tracked' },
             ].map(stat => (
               <div key={stat.label} className="bg-white rounded-2xl p-6 shadow-sm border border-[#d1ecd7]">
                 <div className="text-3xl font-bold text-[#2e6f40] mb-1">{stat.value}</div>
@@ -160,7 +160,7 @@ export default async function Home() {
       <section id="how-it-works" className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
-            How to Use Home Hero Hub
+            How to Use Home Hub
           </h2>
           <p className="text-center text-gray-600 mb-12">
             Four simple steps to a smarter home.
@@ -173,7 +173,7 @@ export default async function Home() {
                 1
               </div>
               <div className="bg-white rounded-xl p-6 flex-1 border border-[#d1ecd7] shadow-sm">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Choose Your Ecosystem</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Choose Your Platform</h3>
                 <p className="text-gray-600 mb-4">
                   Do you use Amazon Alexa, Google Home, or Apple HomeKit? Pick
                   what you have—or what you're thinking of getting.
@@ -215,7 +215,7 @@ export default async function Home() {
               <div className="bg-white rounded-xl p-6 flex-1 border border-[#d1ecd7] shadow-sm">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Check Compatibility</h3>
                 <p className="text-gray-600 mb-4">
-                  See instantly if a device works with your ecosystem. We show
+                  See instantly if a device works with your platform. We show
                   exactly which voice assistants, protocols, and systems it supports.
                 </p>
                 <div className="bg-[#f0f9f2] border border-[#d1ecd7] rounded-lg p-4 space-y-2">
@@ -267,10 +267,10 @@ export default async function Home() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
-            Popular Smart Home Ecosystems
+            Start with what you have
           </h2>
           <p className="text-center text-gray-600 mb-12">
-            Choose the system that works best for you—or use multiple.
+            Not sure? Pick the voice assistant on your phone or speaker.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -295,7 +295,7 @@ export default async function Home() {
                   Voice control with Echo devices. Largest selection of compatible products.
                 </p>
                 <Link href="/compatibility?ecosystem=alexa" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Browse Alexa Devices →
+                  Show compatible devices
                 </Link>
               </div>
             </div>
@@ -321,7 +321,7 @@ export default async function Home() {
                   Google Assistant integration. Great with Android phones and Nest products.
                 </p>
                 <Link href="/compatibility?ecosystem=google_home" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Browse Google Devices →
+                  Show compatible devices
                 </Link>
               </div>
             </div>
@@ -347,7 +347,7 @@ export default async function Home() {
                   Siri voice control. Secure and private. Best for iPhone and iPad users.
                 </p>
                 <Link href="/compatibility?ecosystem=apple_homekit" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Browse HomeKit Devices →
+                  Show compatible devices
                 </Link>
               </div>
             </div>
@@ -371,10 +371,10 @@ export default async function Home() {
               <div className="p-5">
                 <h3 className="font-semibold text-lg text-gray-900 mb-2">Home Assistant</h3>
                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Advanced local automation. Works with almost everything. Great for tech-savvy users.
+                  For hands-on folks who want full control. A little more setup, a lot more flexibility.
                 </p>
                 <Link href="/compatibility?ecosystem=home_assistant" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Browse HA Devices →
+                  Show compatible devices
                 </Link>
               </div>
             </div>
@@ -408,10 +408,10 @@ export default async function Home() {
                 <span>★</span> Amazon Best Sellers
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                Most Popular Smart Home Devices
+                Popular picks to get you started
               </h2>
               <p className="text-gray-600">
-                The top-selling devices people are buying right now
+                Tried-and-true devices that work out of the box.
               </p>
             </div>
 
@@ -475,7 +475,7 @@ export default async function Home() {
                         rel="noopener noreferrer"
                         className="mt-auto text-center text-xs font-semibold text-[#FF9900] hover:text-[#e08000] transition-colors border-t border-gray-50 pt-2"
                       >
-                        View on Amazon →
+                        See details
                       </a>
                     </div>
                   </div>
@@ -590,7 +590,7 @@ export default async function Home() {
               <h3 className="text-lg font-bold text-gray-900 mb-2">Compatibility Checker</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 Know before you buy. Check if products work together across all
-                smart home protocols and ecosystems.
+                smart home protocols and platforms.
               </p>
             </div>
 
@@ -603,7 +603,7 @@ export default async function Home() {
               <h3 className="text-lg font-bold text-gray-900 mb-2">Inventory Manager</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 Track all your smart devices in one place. See your full
-                ecosystem at a glance.
+                platform at a glance.
               </p>
             </div>
 
@@ -656,7 +656,7 @@ export default async function Home() {
               },
               {
                 q: 'Can I mix Alexa and Google Home devices?',
-                a: 'Absolutely! Many devices work with both ecosystems at the same time. Look for products that list multiple ecosystems in our compatibility checker. You can even control the same light bulb with both Alexa and Google Assistant.',
+                a: 'Absolutely! Many devices work with both platforms at the same time. Look for products that list multiple platforms in our compatibility checker. You can even control the same light bulb with both Alexa and Google Assistant.',
               },
               {
                 q: "What's the difference between Zigbee, Z-Wave, and WiFi?",
@@ -667,7 +667,7 @@ export default async function Home() {
                 a: 'Start simple! Pick a voice assistant (Amazon Echo, Google Home, or Apple HomePod), then add a couple of smart bulbs or plugs that work with it. We recommend WiFi devices first—they\'re the easiest to set up with no extra hardware needed.',
               },
               {
-                q: 'Is Home Hero Hub free to use?',
+                q: 'Is Home Hub free to use?',
                 a: 'Yes! Searching our database and checking compatibility is completely free. We earn a small commission when you buy through our Amazon links, which helps us keep the site running and the database up to date.',
               },
             ].map(({ q, a }) => (
@@ -729,7 +729,7 @@ export default async function Home() {
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #2e6f40, #3d8b54)' }}>
                   <span className="text-white font-bold text-sm">H³</span>
                 </div>
-                <span className="text-lg font-bold">Home Hero Hub</span>
+                <span className="text-lg font-bold">Home Hub</span>
               </div>
               <p className="text-gray-400 text-sm">Your smart home compatibility guide</p>
             </div>
@@ -764,7 +764,7 @@ export default async function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; 2026 Home Hero Hub. All rights reserved.</p>
+            <p>&copy; 2026 Home Hub. All rights reserved.</p>
           </div>
         </div>
       </footer>
