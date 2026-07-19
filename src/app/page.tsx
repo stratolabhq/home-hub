@@ -4,6 +4,7 @@ import { ADVANCED_MODE } from '@/lib/feature-flags';
 import { Home as HomeIcon, CheckCircle, XCircle, Zap } from 'lucide-react';
 import { generateAmazonLink } from '@/lib/amazon-affiliate';
 import DeviceCategoryShowcase from '@/components/DeviceCategoryShowcase';
+import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 
 interface BestsellerRow {
   id: string;
@@ -481,13 +482,14 @@ export default async function Home() {
               })}
             </div>
 
-            <div className="text-center mt-8">
+            <div className="text-center mt-8 space-y-3">
               <Link
                 href="/bestsellers"
                 className="inline-flex items-center gap-2 text-[#2e6f40] font-semibold hover:text-[#1f4d2b] transition-colors"
               >
                 View All Best Sellers →
               </Link>
+              <AffiliateDisclosure />
             </div>
           </div>
         </section>
@@ -748,7 +750,7 @@ export default async function Home() {
             <div>
               <h4 className="font-bold mb-4 text-[#6fbf7d]">Company</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-[#6fbf7d] transition">About</a></li>
+                <li><a href="/about" className="hover:text-[#6fbf7d] transition">About</a></li>
                 <li><a href="#what-is-smart-home" className="hover:text-[#6fbf7d] transition">Getting Started</a></li>
                 <li><a href="/request-device" className="hover:text-[#6fbf7d] transition">Request Device</a></li>
               </ul>
@@ -756,12 +758,13 @@ export default async function Home() {
             <div>
               <h4 className="font-bold mb-4 text-[#6fbf7d]">Legal</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-[#6fbf7d] transition">Privacy</a></li>
-                <li><a href="#" className="hover:text-[#6fbf7d] transition">Terms</a></li>
+                <li><a href="/privacy" className="hover:text-[#6fbf7d] transition">Privacy</a></li>
+                <li><a href="/terms" className="hover:text-[#6fbf7d] transition">Terms</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm space-y-2">
+            <AffiliateDisclosure />
             <p>&copy; 2026 Home Hub. All rights reserved.</p>
           </div>
         </div>

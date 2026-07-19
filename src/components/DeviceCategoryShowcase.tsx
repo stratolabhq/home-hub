@@ -10,7 +10,6 @@ const CATEGORIES = [
   { type: 'thermostat',  title: 'Climate Control',   subtitle: 'Thermostats, HVAC',        href: '/compatibility?category=climate' },
   { type: 'sensor',      title: 'Sensors',           subtitle: 'Motion, door, temp',       href: '/compatibility?category=sensors' },
   { type: 'switch',      title: 'Smart Switches',    subtitle: 'Wall switches, dimmers',   href: '/compatibility?category=switches' },
-  { type: 'doorbell',    title: 'Doorbells',         subtitle: 'Video & smart doorbells',  href: '/compatibility?category=security' },
   { type: 'smart-lock',  title: 'Smart Locks',       subtitle: 'Deadbolts, keypads',       href: '/compatibility?category=locks' },
 ];
 
