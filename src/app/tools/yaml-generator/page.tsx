@@ -286,10 +286,10 @@ export default function YamlGeneratorPage() {
           <div className="text-6xl mb-6">🚀</div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Almost ready</h1>
           <p className="text-gray-600 mb-2 leading-relaxed">
-            We're building a helper that writes your config automatically.
+            We&apos;re building a helper that writes your config automatically.
           </p>
           <p className="text-gray-600 mb-8 leading-relaxed">
-            For now, here's what you can do today.
+            For now, here&apos;s what you can do today.
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Link

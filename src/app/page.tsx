@@ -71,7 +71,7 @@ export default async function Home() {
           </h1>
 
           <p className="text-xl text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Pick the platform you already use — we'll show you devices that
+            Pick the platform you already use — we&apos;ll show you devices that
             work with it, no research required.
           </p>
 
