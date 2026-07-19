@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import AffiliateDisclosure from '@/components/AffiliateDisclosure';
 import { generateAmazonLink, trackAmazonClick } from '@/lib/amazon-affiliate';
+import { applyPopularFilter } from '@/lib/popular-filter';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -90,6 +91,38 @@ const DEFAULT_FILTERS: Filters = {
 
 const LS_KEY = 'compatibility_filters_v1';
 
+// ── Beginner funnel (homepage platform cards → pre-filtered starter list) ───
+
+// Matches the `ecosystem` <select> values below, which mirror the
+// products.ecosystems DB keys directly (alexa / google_home / apple_homekit).
+const ECOSYSTEM_PARAM_VALUES = new Set(['alexa', 'google_home', 'apple_homekit', 'smartthings', 'matter']);
+
+// Home Assistant isn't part of `ecosystems` — it's the separate
+// products.home_assistant column, surfaced via the "Works with Home
+// Assistant" toggle rather than the ecosystem select.
+const PLATFORM_LABELS: Record<string, string> = {
+  alexa: 'Amazon Alexa',
+  google_home: 'Google Home',
+  apple_homekit: 'Apple HomeKit',
+  home_assistant: 'Home Assistant',
+};
+
+const STARTER_DEVICE_LIMIT = 8;
+
+function rankStarterDevices(list: Product[]): Product[] {
+  return [...list].sort((a, b) => {
+    const aNoHub = !a.requires_hub || a.requires_hub === 'false';
+    const bNoHub = !b.requires_hub || b.requires_hub === 'false';
+    if (aNoHub !== bNoHub) return aNoHub ? -1 : 1;
+
+    const aWifi = a.protocols?.includes('WiFi') ?? false;
+    const bWifi = b.protocols?.includes('WiFi') ?? false;
+    if (aWifi !== bWifi) return aWifi ? -1 : 1;
+
+    return priceRangeToMidpoint(a.price_range) - priceRangeToMidpoint(b.price_range);
+  });
+}
+
 function loadFilters(): Filters {
   if (typeof window === 'undefined') return DEFAULT_FILTERS;
   try {
@@ -158,14 +191,21 @@ function getEcosystemBadgeVariant(level?: string): 'green' | 'amber' | 'gray' {
 
 // ═══════════════════════════════════════════════════════════════════════════
 
-export default function CompatibilityChecker() {
+function CompatibilityContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  // True when the current filter state came from a homepage platform card
+  // (e.g. /compatibility?ecosystem=alexa&popular=1) rather than manual use
+  // of the filter panel. Drives the curated, capped starter list.
+  const [starterView, setStarterView] = useState(false);
+  const [starterPlatform, setStarterPlatform] = useState<string | null>(null);
 
   const [user, setUser] = useState<any>(null);
   const [userInventory, setUserInventory] = useState<InventoryItem[]>([]);
@@ -174,7 +214,25 @@ export default function CompatibilityChecker() {
   const [homeCheckDevice, setHomeCheckDevice] = useState<Product | null>(null);
 
   useEffect(() => {
-    setFilters(loadFilters());
+    const ecoParam = searchParams.get('ecosystem');
+    const popularParam = searchParams.get('popular');
+
+    if (ecoParam) {
+      const isHomeAssistant = ecoParam === 'home_assistant';
+      const ecosystem = !isHomeAssistant && ECOSYSTEM_PARAM_VALUES.has(ecoParam) ? ecoParam : 'all';
+
+      setFilters({
+        ...DEFAULT_FILTERS,
+        ecosystem,
+        homeAssistant: isHomeAssistant,
+        popularOnly: popularParam !== '0',
+      });
+      setStarterView(true);
+      setStarterPlatform(PLATFORM_LABELS[ecoParam] ?? null);
+    } else {
+      setFilters(loadFilters());
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -195,7 +253,7 @@ export default function CompatibilityChecker() {
   const fetchProducts = async (popularOnly = true) => {
     setLoading(true);
     let query = supabase.from('products').select('*').order('name');
-    if (popularOnly) query = query.eq('is_popular', true);
+    query = applyPopularFilter(query, popularOnly);
     const { data, error } = await query;
     if (!error) setProducts(data || []);
     setLoading(false);
@@ -236,10 +294,21 @@ export default function CompatibilityChecker() {
     [products]
   );
 
-  const patch = (update: Partial<Filters>) =>
+  const patch = (update: Partial<Filters>) => {
+    setStarterView(false);
     setFilters(prev => ({ ...prev, ...update }));
+  };
 
-  const clearFilters = () => setFilters(DEFAULT_FILTERS);
+  const clearFilters = () => {
+    setStarterView(false);
+    setFilters(DEFAULT_FILTERS);
+  };
+
+  const showAllDevices = () => {
+    setStarterView(false);
+    setFilters({ ...DEFAULT_FILTERS, ecosystem: 'all', homeAssistant: false, popularOnly: false });
+  };
+
   const activeCount = useMemo(() => countActiveFilters(filters), [filters]);
 
   const toggleProtocol = (p: string) =>
@@ -291,6 +360,14 @@ export default function CompatibilityChecker() {
       return true;
     });
 
+    // Curated, capped starter list for beginners arriving via a homepage
+    // platform card. Favors cheap, WiFi, no-hub devices (bulbs, plugs) and
+    // bypasses the manual sort order. Turning off "popular" or touching any
+    // filter exits starter view (see patch/clearFilters/showAllDevices).
+    if (starterView && filters.popularOnly) {
+      return rankStarterDevices(list).slice(0, STARTER_DEVICE_LIMIT);
+    }
+
     switch (filters.sort) {
       case 'alpha':
         list = [...list].sort((a, b) => a.name.localeCompare(b.name));
@@ -307,7 +384,7 @@ export default function CompatibilityChecker() {
     }
 
     return list;
-  }, [products, filters, userEcosystems]);
+  }, [products, filters, userEcosystems, starterView]);
 
   const homeCheckResult = useMemo(() => {
     if (!homeCheckDevice || !inventoryLoaded || !userInventory.length) return null;
@@ -345,10 +422,19 @@ export default function CompatibilityChecker() {
         {/* Page header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Smart Home Compatibility Checker</h1>
-          <p className="text-gray-600">
-            Search for devices and check compatibility across ecosystems
-            {user && <span className="ml-1">— or check any device against your home inventory</span>}
-          </p>
+          {starterView ? (
+            <p className="text-gray-600">
+              Our top picks for {starterPlatform ?? 'your platform'} —{' '}
+              <button onClick={showAllDevices} className="text-[#2e6f40] hover:text-[#1f4d2b] font-medium underline">
+                see all devices
+              </button>
+            </p>
+          ) : (
+            <p className="text-gray-600">
+              Search for devices and check compatibility across platforms
+              {user && <span className="ml-1">— or check any device against your home inventory</span>}
+            </p>
+          )}
         </div>
 
         {/* ── Filter panel ──────────────────────────────────────────────── */}
@@ -659,10 +745,19 @@ export default function CompatibilityChecker() {
             <div className="p-8 text-center text-gray-500">Loading devices…</div>
           ) : filteredProducts.length === 0 ? (
             <div className="p-8 text-center">
-              <p className="text-gray-500 mb-3">No devices match your current filters.</p>
-              <button onClick={clearFilters} className="text-sm text-[#2e6f40] hover:text-[#1f4d2b] font-medium">
-                Clear all filters
-              </button>
+              <p className="text-gray-500 mb-3">
+                {starterView
+                  ? `No popular starter devices found for ${starterPlatform ?? 'this platform'} yet.`
+                  : 'No devices match your current filters.'}
+              </p>
+              <div className="flex items-center justify-center gap-4">
+                <button onClick={clearFilters} className="text-sm text-[#2e6f40] hover:text-[#1f4d2b] font-medium">
+                  Clear all filters
+                </button>
+                <button onClick={showAllDevices} className="text-sm text-[#2e6f40] hover:text-[#1f4d2b] font-medium underline">
+                  See all devices
+                </button>
+              </div>
             </div>
           ) : (
             <div className="divide-y divide-gray-50">
@@ -794,5 +889,13 @@ export default function CompatibilityChecker() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function CompatibilityChecker() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><p className="text-gray-500">Loading devices…</p></div>}>
+      <CompatibilityContent />
+    </Suspense>
   );
 }

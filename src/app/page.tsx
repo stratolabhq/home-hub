@@ -75,23 +75,8 @@ export default async function Home() {
             work with it, no research required.
           </p>
 
-          <div className="flex gap-4 justify-center flex-wrap">
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center justify-center px-8 py-4 bg-[#2e6f40] text-white rounded-xl font-semibold hover:bg-[#3d8b54] transition-colors shadow-md"
-            >
-              How It Works
-            </a>
-            <Link
-              href="/compatibility"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-[#2e6f40] rounded-xl font-semibold border-2 border-[#2e6f40] hover:bg-[#f0f9f2] transition-colors"
-            >
-              Browse Devices
-            </Link>
-          </div>
-
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
             {[
               { value: `${popularCount.toLocaleString()}+`, label: 'Popular Devices' },
               { value: 'Free',   label: 'Always Free to Search' },
@@ -102,6 +87,155 @@ export default async function Home() {
                 <div className="text-gray-600 text-sm">{stat.label}</div>
               </div>
             ))}
+          </div>
+
+          {/* Secondary CTAs — de-emphasized; the platform picker below is primary */}
+          <div className="mt-8 flex items-center justify-center gap-3 text-sm">
+            <a href="#how-it-works" className="text-gray-500 hover:text-[#2e6f40] font-medium underline underline-offset-4">
+              How It Works
+            </a>
+            <span className="text-gray-300">·</span>
+            <Link href="/compatibility" className="text-gray-500 hover:text-[#2e6f40] font-medium underline underline-offset-4">
+              Browse All Devices
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Platform Picker (primary CTA) ───────────────────────────────
+          Moved directly under the hero so it's the first and dominant
+          action a visitor takes: pick a platform → curated starter list. */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
+            Start with what you have
+          </h2>
+          <p className="text-center text-gray-600 mb-12">
+            Not sure? Pick the voice assistant on your phone or speaker.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Alexa */}
+            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
+              <div className="h-36 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
+                </div>
+                <div className="text-center relative z-10">
+                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">Alexa</span>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">Amazon Alexa</h3>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  Voice control with Echo devices. Largest selection of compatible products.
+                </p>
+                <Link href="/compatibility?ecosystem=alexa&popular=1" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
+                  Show compatible devices
+                </Link>
+              </div>
+            </div>
+
+            {/* Google */}
+            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
+              <div className="h-36 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
+                </div>
+                <div className="text-center relative z-10">
+                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">Google</span>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">Google Home</h3>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  Google Assistant integration. Great with Android phones and Nest products.
+                </p>
+                <Link href="/compatibility?ecosystem=google_home&popular=1" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
+                  Show compatible devices
+                </Link>
+              </div>
+            </div>
+
+            {/* HomeKit */}
+            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
+              <div className="h-36 bg-gradient-to-br from-gray-600 to-gray-900 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
+                </div>
+                <div className="text-center relative z-10">
+                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">HomeKit</span>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">Apple HomeKit</h3>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  Siri voice control. Secure and private. Best for iPhone and iPad users.
+                </p>
+                <Link href="/compatibility?ecosystem=apple_homekit&popular=1" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
+                  Show compatible devices
+                </Link>
+              </div>
+            </div>
+
+            {/* Home Assistant */}
+            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
+              <div className="h-36 bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
+                </div>
+                <div className="text-center relative z-10">
+                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">Home Assistant</span>
+                </div>
+              </div>
+              <div className="p-5">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">Home Assistant</h3>
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  For hands-on folks who want full control. A little more setup, a lot more flexibility.
+                </p>
+                <Link href="/compatibility?ecosystem=home_assistant&popular=1" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
+                  Show compatible devices
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Device types teaser */}
+          <div className="mt-12 bg-[#f0f9f2] border border-[#d1ecd7] rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Not sure what devices to buy?</h3>
+              <p className="text-gray-600 text-sm max-w-lg">
+                Our visual device guide breaks down smart bulbs, plugs, locks, thermostats, cameras, sensors,
+                switches, and doorbells — with prices, brands, and buying tips.
+              </p>
+            </div>
+            <Link
+              href="/getting-started/device-types"
+              className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-[#2e6f40] text-white rounded-xl font-semibold hover:bg-[#3d8b54] transition-colors shadow-sm whitespace-nowrap"
+            >
+              Browse Device Types →
+            </Link>
           </div>
         </div>
       </section>
@@ -262,142 +396,6 @@ export default async function Home() {
       </section>
 
       <DeviceCategoryShowcase />
-
-      {/* ── Popular Ecosystems ────────────────────────────────────────── */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
-            Start with what you have
-          </h2>
-          <p className="text-center text-gray-600 mb-12">
-            Not sure? Pick the voice assistant on your phone or speaker.
-          </p>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Alexa */}
-            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
-              <div className="h-36 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">Alexa</span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">Amazon Alexa</h3>
-                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Voice control with Echo devices. Largest selection of compatible products.
-                </p>
-                <Link href="/compatibility?ecosystem=alexa" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Show compatible devices
-                </Link>
-              </div>
-            </div>
-
-            {/* Google */}
-            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
-              <div className="h-36 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">Google</span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">Google Home</h3>
-                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Google Assistant integration. Great with Android phones and Nest products.
-                </p>
-                <Link href="/compatibility?ecosystem=google_home" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Show compatible devices
-                </Link>
-              </div>
-            </div>
-
-            {/* HomeKit */}
-            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
-              <div className="h-36 bg-gradient-to-br from-gray-600 to-gray-900 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">HomeKit</span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">Apple HomeKit</h3>
-                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  Siri voice control. Secure and private. Best for iPhone and iPad users.
-                </p>
-                <Link href="/compatibility?ecosystem=apple_homekit" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Show compatible devices
-                </Link>
-              </div>
-            </div>
-
-            {/* Home Assistant */}
-            <div className="group border-2 border-gray-100 rounded-xl overflow-hidden hover:border-[#2e6f40] hover:shadow-md transition-all">
-              <div className="h-36 bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-8 translate-y-8" />
-                </div>
-                <div className="text-center relative z-10">
-                  <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-white border-opacity-30">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-bold tracking-wider uppercase opacity-90">Home Assistant</span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">Home Assistant</h3>
-                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                  For hands-on folks who want full control. A little more setup, a lot more flexibility.
-                </p>
-                <Link href="/compatibility?ecosystem=home_assistant" className="text-[#2e6f40] text-sm font-semibold group-hover:text-[#1f4d2b] transition-colors">
-                  Show compatible devices
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Device types teaser */}
-          <div className="mt-12 bg-[#f0f9f2] border border-[#d1ecd7] rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Not sure what devices to buy?</h3>
-              <p className="text-gray-600 text-sm max-w-lg">
-                Our visual device guide breaks down smart bulbs, plugs, locks, thermostats, cameras, sensors,
-                switches, and doorbells — with prices, brands, and buying tips.
-              </p>
-            </div>
-            <Link
-              href="/getting-started/device-types"
-              className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-[#2e6f40] text-white rounded-xl font-semibold hover:bg-[#3d8b54] transition-colors shadow-sm whitespace-nowrap"
-            >
-              Browse Device Types →
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* ── Amazon Best Sellers ──────────────────────────────────────── */}
       {bestsellers.length > 0 && (
